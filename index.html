@@ -1,0 +1,806 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#0a0a0a">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="apple-mobile-web-app-title" content="Matrix Idioms">
+<meta name="description" content="Learn English idioms through the Matrix trilogy — AI-powered">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Rajdhani:wght@400;500;600&display=swap" rel="stylesheet">
+<title>Matrix Idioms</title>
+<style>
+:root {
+  --bg: #0a0a0a;
+  --bg2: #111111;
+  --bg3: #181818;
+  --green: #00ff41;
+  --green-dim: #00cc33;
+  --green-faint: rgba(0,255,65,0.08);
+  --green-border: rgba(0,255,65,0.2);
+  --amber: #ffb700;
+  --amber-faint: rgba(255,183,0,0.1);
+  --amber-border: rgba(255,183,0,0.3);
+  --red: #ff3333;
+  --text: #c8d8c8;
+  --text-dim: #6a7a6a;
+  --text-faint: #3a4a3a;
+  --radius: 6px;
+  --font-mono: 'Share Tech Mono', monospace;
+  --font-ui: 'Rajdhani', sans-serif;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-ui);
+  font-size: 16px;
+  min-height: 100vh;
+  min-height: 100dvh;
+  overflow-x: hidden;
+}
+
+.scanline {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.03) 2px, rgba(0,0,0,0.03) 4px);
+  pointer-events: none;
+  z-index: 999;
+}
+
+.app {
+  max-width: 480px;
+  margin: 0 auto;
+  padding: 0 0 100px;
+  min-height: 100vh;
+  min-height: 100dvh;
+}
+
+/* Header */
+.hdr {
+  padding: 16px 20px 12px;
+  border-bottom: 1px solid var(--green-border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  background: rgba(10,10,10,0.95);
+  backdrop-filter: blur(8px);
+  z-index: 10;
+}
+.hdr-logo {
+  font-family: var(--font-mono);
+  font-size: 14px;
+  color: var(--green);
+  letter-spacing: 0.08em;
+}
+.hdr-logo span { color: var(--text-dim); }
+.hdr-stats {
+  display: flex;
+  gap: 16px;
+}
+.hdr-stat {
+  text-align: right;
+}
+.hdr-stat-num {
+  font-family: var(--font-mono);
+  font-size: 16px;
+  color: var(--green);
+  line-height: 1;
+}
+.hdr-stat-lbl {
+  font-size: 9px;
+  color: var(--text-dim);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+/* Content area */
+.content { padding: 16px 20px; }
+
+/* Film selector */
+.film-tabs {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 16px;
+}
+.film-tab {
+  flex: 1;
+  padding: 8px 4px;
+  border: 1px solid var(--green-border);
+  background: transparent;
+  color: var(--text-dim);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  border-radius: var(--radius);
+  transition: all 0.15s;
+  text-align: center;
+}
+.film-tab.active {
+  border-color: var(--green);
+  color: var(--green);
+  background: var(--green-faint);
+}
+
+/* Scene select */
+.scene-wrap {
+  position: relative;
+  margin-bottom: 14px;
+}
+.scene-label {
+  font-size: 10px;
+  color: var(--text-dim);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  font-family: var(--font-mono);
+  margin-bottom: 6px;
+}
+.scene-select {
+  width: 100%;
+  padding: 10px 14px;
+  background: var(--bg2);
+  border: 1px solid var(--green-border);
+  color: var(--text);
+  font-family: var(--font-ui);
+  font-size: 14px;
+  border-radius: var(--radius);
+  appearance: none;
+  cursor: pointer;
+}
+.scene-select:focus { outline: none; border-color: var(--green); }
+.scene-arrow {
+  position: absolute;
+  right: 12px;
+  bottom: 12px;
+  color: var(--green-dim);
+  pointer-events: none;
+  font-family: var(--font-mono);
+  font-size: 12px;
+}
+
+/* Mode tabs */
+.mode-tabs {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 14px;
+}
+.mode-tab {
+  flex: 1;
+  padding: 7px;
+  border: 1px solid var(--green-border);
+  background: transparent;
+  color: var(--text-dim);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  cursor: pointer;
+  border-radius: var(--radius);
+  text-align: center;
+  transition: all 0.15s;
+}
+.mode-tab.active {
+  border-color: var(--green);
+  color: var(--green);
+  background: var(--green-faint);
+}
+
+/* Generate button */
+.gen-btn {
+  width: 100%;
+  padding: 14px;
+  background: var(--green-faint);
+  border: 1px solid var(--green);
+  color: var(--green);
+  font-family: var(--font-mono);
+  font-size: 13px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  cursor: pointer;
+  border-radius: var(--radius);
+  margin-bottom: 16px;
+  transition: all 0.15s;
+  position: relative;
+  overflow: hidden;
+}
+.gen-btn:hover { background: rgba(0,255,65,0.15); }
+.gen-btn:active { transform: scale(0.98); }
+.gen-btn:disabled { opacity: 0.3; cursor: default; transform: none; }
+.gen-btn.loading::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0;
+  height: 2px;
+  background: var(--green);
+  animation: loadbar 1.5s ease-in-out infinite;
+}
+@keyframes loadbar {
+  0% { width: 0; left: 0; }
+  50% { width: 60%; left: 20%; }
+  100% { width: 0; left: 100%; }
+}
+
+/* Scene card */
+.scene-card {
+  background: var(--bg2);
+  border: 1px solid var(--green-border);
+  border-radius: var(--radius);
+  padding: 16px;
+  margin-bottom: 14px;
+  min-height: 120px;
+}
+.scene-meta {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--text-dim);
+  letter-spacing: 0.08em;
+  margin-bottom: 14px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--text-faint);
+}
+.dline {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 12px;
+  line-height: 1.6;
+}
+.spk {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--green-dim);
+  min-width: 72px;
+  padding-top: 3px;
+  flex-shrink: 0;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+.txt { font-size: 15px; color: var(--text); }
+.iword {
+  background: var(--amber-faint);
+  color: var(--amber);
+  border: 1px solid var(--amber-border);
+  border-radius: 3px;
+  padding: 1px 5px;
+  cursor: pointer;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  display: inline-block;
+  transition: all 0.12s;
+}
+.iword:active { transform: scale(0.96); }
+.placeholder {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--text-dim);
+  text-align: center;
+  padding: 2rem 0;
+  line-height: 1.8;
+}
+
+/* Idiom panel */
+.ipanel {
+  background: var(--bg3);
+  border: 1px solid var(--amber-border);
+  border-radius: var(--radius);
+  padding: 14px 16px;
+  margin-bottom: 14px;
+  display: none;
+  animation: fadeIn 0.2s ease;
+}
+.ipanel.show { display: block; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: translateY(0); } }
+.i-phrase {
+  font-family: var(--font-mono);
+  font-size: 14px;
+  color: var(--amber);
+  margin-bottom: 8px;
+  letter-spacing: 0.03em;
+}
+.i-meaning {
+  font-size: 14px;
+  color: var(--text);
+  line-height: 1.6;
+  margin-bottom: 10px;
+}
+.i-example {
+  font-size: 13px;
+  color: var(--text-dim);
+  font-style: italic;
+  border-left: 2px solid var(--text-faint);
+  padding-left: 10px;
+  margin-bottom: 10px;
+  line-height: 1.5;
+}
+.i-hook {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--green);
+  background: var(--green-faint);
+  border: 1px solid var(--green-border);
+  border-radius: var(--radius);
+  padding: 8px 10px;
+  line-height: 1.6;
+}
+
+/* Quiz */
+.qsec {
+  background: var(--bg2);
+  border: 1px solid var(--green-border);
+  border-radius: var(--radius);
+  padding: 14px 16px;
+  margin-bottom: 14px;
+  display: none;
+}
+.qsec.show { display: block; }
+.qq {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--text);
+  margin-bottom: 12px;
+  line-height: 1.6;
+  letter-spacing: 0.02em;
+}
+.qq strong { color: var(--amber); }
+.qopts { display: flex; flex-direction: column; gap: 8px; }
+.qopt {
+  padding: 10px 12px;
+  border: 1px solid var(--text-faint);
+  background: transparent;
+  color: var(--text);
+  font-family: var(--font-ui);
+  font-size: 14px;
+  border-radius: var(--radius);
+  cursor: pointer;
+  text-align: left;
+  line-height: 1.5;
+  transition: all 0.12s;
+}
+.qopt:hover { border-color: var(--green-border); background: var(--green-faint); }
+.qopt.correct { border-color: var(--green); background: var(--green-faint); color: var(--green); }
+.qopt.wrong { border-color: var(--red); background: rgba(255,51,51,0.08); color: var(--red); }
+
+/* Bottom nav */
+.brow {
+  display: none;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+.brow.show { display: flex; }
+.bbtn {
+  flex: 1;
+  padding: 10px;
+  border: 1px solid var(--green-border);
+  background: transparent;
+  color: var(--text-dim);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  cursor: pointer;
+  border-radius: var(--radius);
+  text-align: center;
+  transition: all 0.15s;
+}
+.bbtn:hover { border-color: var(--green); color: var(--green); }
+.bbtn:active { transform: scale(0.97); }
+
+.hint {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-dim);
+  text-align: center;
+  letter-spacing: 0.05em;
+  margin-bottom: 8px;
+}
+
+/* Install banner */
+.install-banner {
+  margin: 0 20px 16px;
+  padding: 12px 14px;
+  background: var(--green-faint);
+  border: 1px solid var(--green-border);
+  border-radius: var(--radius);
+  display: none;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+.install-banner.show { display: flex; }
+.install-txt {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--green);
+  letter-spacing: 0.05em;
+  line-height: 1.5;
+}
+.install-btn {
+  padding: 6px 12px;
+  background: var(--green);
+  color: #000;
+  border: none;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: bold;
+  border-radius: var(--radius);
+  cursor: pointer;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+/* Idiom counter row */
+.icount-row {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-bottom: 12px;
+}
+.icount-chip {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  padding: 3px 8px;
+  border-radius: 20px;
+  background: var(--bg3);
+  border: 1px solid var(--text-faint);
+  color: var(--text-dim);
+  letter-spacing: 0.04em;
+}
+.icount-chip.seen {
+  border-color: var(--amber-border);
+  color: var(--amber);
+  background: var(--amber-faint);
+}
+</style>
+</head>
+<body>
+<div class="scanline"></div>
+
+<div class="app">
+  <header class="hdr">
+    <div class="hdr-logo">MATRIX<span>//</span>IDIOMS</div>
+    <div class="hdr-stats">
+      <div class="hdr-stat">
+        <div class="hdr-stat-num" id="stat-i">0</div>
+        <div class="hdr-stat-lbl">learned</div>
+      </div>
+      <div class="hdr-stat">
+        <div class="hdr-stat-num" id="stat-q">0</div>
+        <div class="hdr-stat-lbl">correct</div>
+      </div>
+    </div>
+  </header>
+
+  <div class="install-banner" id="install-banner">
+    <div class="install-txt">Add to home screen<br>for app experience</div>
+    <button class="install-btn" id="install-btn" onclick="installApp()">INSTALL</button>
+  </div>
+
+  <div class="content">
+
+    <div class="film-tabs">
+      <button class="film-tab active" onclick="selFilm(0)" id="fb0">MATRIX I</button>
+      <button class="film-tab" onclick="selFilm(1)" id="fb1">RELOADED</button>
+      <button class="film-tab" onclick="selFilm(2)" id="fb2">REVOLUTIONS</button>
+    </div>
+
+    <div class="scene-wrap">
+      <div class="scene-label">// select scene</div>
+      <select class="scene-select" id="ssel" onchange="onSC()"></select>
+      <div class="scene-arrow">▾</div>
+    </div>
+
+    <div class="mode-tabs">
+      <button class="mode-tab active" onclick="setMode('story')" id="t-story">[ STORY MODE ]</button>
+      <button class="mode-tab" onclick="setMode('quiz')" id="t-quiz">[ QUIZ MODE ]</button>
+    </div>
+
+    <button class="gen-btn" id="gbtn" onclick="gen()">▶ GENERATE SCENE</button>
+
+    <div class="scene-card" id="scard">
+      <div class="placeholder">// SYSTEM READY<br>SELECT A SCENE AND GENERATE<br>TO BEGIN TRAINING</div>
+    </div>
+
+    <div class="ipanel" id="ipanel"></div>
+    <div class="qsec" id="qsec"></div>
+
+    <div class="brow" id="brow">
+      <button class="bbtn" onclick="gen()">↺ REGENERATE</button>
+      <button class="bbtn" onclick="nextSc()">NEXT SCENE ▶</button>
+    </div>
+    <div class="hint" id="hint"></div>
+
+  </div>
+</div>
+
+<script>
+const API_KEY = 'YOUR_ANTHROPIC_API_KEY_HERE';
+
+const F = [
+  {
+    title: "The Matrix (1999)",
+    scenes: [
+      "Opening — Trinity flees agents across rooftops",
+      "Neo's cubicle — double life as hacker",
+      "The phone call from Morpheus",
+      "Agents interrogate Neo — his mouth is sealed shut",
+      "Trinity picks up Neo in the rainy car",
+      "The bug is removed from Neo's stomach",
+      "Red pill or blue pill — Neo chooses",
+      "The construct — loading programs into Neo's mind",
+      "Sparring program — Neo trains with Morpheus",
+      "The jump program — Neo fails his first leap",
+      "Woman in the red dress — danger of distraction",
+      "Mouse and the steak — what is real?",
+      "The Oracle's apartment — cookies and prophecy",
+      "Cypher betrays the crew — dinner with Agent Smith",
+      "Tank fights back — frees Neo",
+      "The lobby shootout — rescuing Morpheus",
+      "Rooftop rescue — the helicopter scene",
+      "Subway fight — Neo vs Agent Smith alone",
+      "Neo dodges bullets — becoming the One"
+    ]
+  },
+  {
+    title: "The Matrix Reloaded (2003)",
+    scenes: [
+      "Zion celebration — the last human city",
+      "Neo's recurring dream — Trinity falling",
+      "Council of Zion — humanity's last stand",
+      "The Merovingian's restaurant — causality and choice",
+      "The Keymaker — unlocking the source",
+      "The chateau fight — Neo vs countless guards",
+      "Freeway chase — Trinity Morpheus and the Keymaker",
+      "The burly brawl — Neo vs 100 Agent Smiths",
+      "The Architect — the truth about the Matrix revealed",
+      "Neo saves Trinity — choosing love over mission",
+      "Smith infects Bane — the enemy within",
+      "Neo stops the sentinels — new power discovered"
+    ]
+  },
+  {
+    title: "The Matrix Revolutions (2003)",
+    scenes: [
+      "Neo trapped in the train station — between worlds",
+      "The Oracle speaks — the path of the One",
+      "Smith has taken over the Oracle",
+      "The siege of Zion begins — machines attack",
+      "The APU battle — humans fight the machines",
+      "Niobe pilots the Logos — race against time",
+      "Neo and Trinity fly above the storm clouds",
+      "Bane reveals himself — Smith on board the ship",
+      "Trinity is mortally wounded reaching machine city",
+      "Neo enters the machine city — blind but certain",
+      "The final battle — Neo vs Smith in the rain",
+      "Neo allows Smith to take him — the sacrifice",
+      "The machines withdraw — peace is made",
+      "Sati paints the sunrise — hope returns to the Matrix"
+    ]
+  }
+];
+
+let cf = 0, csi = 0, mode = 'story';
+let sp = 0, il = new Set(), qc = 0;
+let lastI = [], aik = null, qa = false;
+let deferredPrompt = null;
+
+window.addEventListener('beforeinstallprompt', e => {
+  e.preventDefault();
+  deferredPrompt = e;
+  document.getElementById('install-banner').className = 'install-banner show';
+});
+
+function installApp() {
+  if (!deferredPrompt) return;
+  deferredPrompt.prompt();
+  deferredPrompt.userChoice.then(() => {
+    deferredPrompt = null;
+    document.getElementById('install-banner').className = 'install-banner';
+  });
+}
+
+function save() {
+  try {
+    localStorage.setItem('mx_il', JSON.stringify([...il]));
+    localStorage.setItem('mx_qc', qc);
+    localStorage.setItem('mx_sp', sp);
+  } catch(e) {}
+}
+
+function load() {
+  try {
+    const saved = localStorage.getItem('mx_il');
+    if (saved) { il = new Set(JSON.parse(saved)); }
+    qc = parseInt(localStorage.getItem('mx_qc') || '0');
+    sp = parseInt(localStorage.getItem('mx_sp') || '0');
+    updateStats();
+  } catch(e) {}
+}
+
+function updateStats() {
+  document.getElementById('stat-i').textContent = il.size;
+  document.getElementById('stat-q').textContent = qc;
+}
+
+function setMode(m) {
+  mode = m;
+  document.getElementById('t-story').className = 'mode-tab' + (m === 'story' ? ' active' : '');
+  document.getElementById('t-quiz').className = 'mode-tab' + (m === 'quiz' ? ' active' : '');
+  document.getElementById('qsec').className = 'qsec';
+  document.getElementById('ipanel').className = 'ipanel';
+  if (m === 'quiz' && lastI.length > 0) showQ();
+  else if (m === 'quiz') document.getElementById('hint').textContent = '// generate a scene first';
+}
+
+function selFilm(i) {
+  cf = i;
+  [0, 1, 2].forEach(j => document.getElementById('fb' + j).className = 'film-tab' + (j === i ? ' active' : ''));
+  popScenes();
+}
+
+function popScenes() {
+  const s = document.getElementById('ssel');
+  s.innerHTML = '';
+  F[cf].scenes.forEach((sc, i) => {
+    const o = document.createElement('option');
+    o.value = i;
+    o.textContent = (i + 1) + '. ' + sc;
+    s.appendChild(o);
+  });
+  csi = 0;
+}
+
+function onSC() {
+  csi = parseInt(document.getElementById('ssel').value);
+}
+
+function nextSc() {
+  csi = (csi + 1) % F[cf].scenes.length;
+  document.getElementById('ssel').value = csi;
+  gen();
+}
+
+async function gen() {
+  const film = F[cf];
+  const sname = film.scenes[csi];
+  const btn = document.getElementById('gbtn');
+  btn.disabled = true;
+  btn.className = 'gen-btn loading';
+  btn.textContent = '▶ GENERATING...';
+  document.getElementById('brow').className = 'brow';
+  document.getElementById('hint').textContent = '';
+  document.getElementById('ipanel').className = 'ipanel';
+  document.getElementById('qsec').className = 'qsec';
+  document.getElementById('scard').innerHTML = '<div class="placeholder">// AI IS WRITING THE SCENE...<br>PLEASE STAND BY</div>';
+  aik = null; lastI = [];
+
+  const prompt = `You are writing for an English idiom learning game set in "${film.title}", scene: "${sname}".
+
+Write 4-6 dialogue lines between Matrix characters from this scene. Embed exactly 4 different common English idioms naturally into the dialogue. The idioms must feel like natural speech, not forced.
+
+Respond ONLY with valid JSON (no markdown, no explanation):
+{"scene_title":"short evocative title","lines":[{"speaker":"Character Name","text":"dialogue with idiom naturally woven in"}],"idioms":[{"phrase":"exact idiom phrase as it appears in text","meaning":"clear simple meaning in 1-2 sentences","example":"a fresh example sentence using this idiom in a completely different context","hook":"a vivid memorable hook to remember this idiom — start with a brain or lightning bolt symbol"}]}
+
+Important rules:
+- Use real Matrix character names (Neo, Morpheus, Trinity, Agent Smith, Oracle, Tank, Cypher, Niobe, Ghost, The Architect, The Merovingian, Sati, etc.)
+- Each idiom must appear word-for-word in one of the dialogue lines
+- Match each character's personality and speech style
+- Make the scene dramatic and true to the film's tone
+- Vary the idioms — use a mix of common everyday idioms`;
+
+  try {
+    const r = await fetch("https://api.anthropic.com/v1/messages", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "x-api-key": API_KEY,
+        "anthropic-version": "2023-06-01",
+        "anthropic-dangerous-direct-browser-calls": "true"
+      },
+      body: JSON.stringify({
+        model: "claude-sonnet-4-20250514",
+        max_tokens: 1000,
+        messages: [{ role: "user", content: prompt }]
+      })
+    });
+    const d = await r.json();
+    if (!r.ok) throw new Error(d.error?.message || 'API error');
+    const raw = d.content.map(b => b.text || '').join('');
+    const parsed = JSON.parse(raw.replace(/```json|```/g, '').trim());
+    renderSc(parsed, film.title, sname);
+    sp++;
+    save();
+    document.getElementById('brow').className = 'brow show';
+    document.getElementById('hint').textContent = '// tap amber text to learn the idiom';
+    if (mode === 'quiz') showQ();
+  } catch (e) {
+    document.getElementById('scard').innerHTML = `<div class="placeholder">// ERROR: ${e.message}<br>CHECK API KEY IN index.html<br>THEN TRY AGAIN</div>`;
+  }
+
+  btn.disabled = false;
+  btn.className = 'gen-btn';
+  btn.textContent = '▶ GENERATE SCENE';
+}
+
+function renderSc(data, ftitle, sname) {
+  lastI = data.idioms || [];
+  let html = `<div class="scene-meta">// ${ftitle.toUpperCase()} &nbsp;·&nbsp; ${sname.toUpperCase()}</div>`;
+  data.lines.forEach(line => {
+    let txt = line.text;
+    lastI.forEach((id, idx) => {
+      if (txt.toLowerCase().includes(id.phrase.toLowerCase())) {
+        const rx = new RegExp(id.phrase.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'gi');
+        txt = txt.replace(rx, `<span class="iword" onclick="showI(${idx})">${id.phrase}</span>`);
+      }
+    });
+    html += `<div class="dline"><span class="spk">${line.speaker}</span><span class="txt">${txt}</span></div>`;
+  });
+  document.getElementById('scard').innerHTML = html;
+}
+
+function showI(idx) {
+  const p = document.getElementById('ipanel');
+  if (aik === idx) { p.className = 'ipanel'; aik = null; return; }
+  aik = idx;
+  const d = lastI[idx];
+  p.innerHTML = `
+    <div class="i-phrase">// "${d.phrase}"</div>
+    <div class="i-meaning">${d.meaning}</div>
+    <div class="i-example">${d.example}</div>
+    <div class="i-hook">${d.hook}</div>
+  `;
+  p.className = 'ipanel show';
+  il.add(d.phrase);
+  save();
+  updateStats();
+  p.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+function showQ() {
+  if (!lastI.length) return;
+  qa = false;
+  const id = lastI[Math.floor(Math.random() * lastI.length)];
+  const wrongs = lastI.filter(i => i.phrase !== id.phrase).slice(0, 2).map(i => i.meaning);
+  while (wrongs.length < 2) wrongs.push("To ignore something completely and pay it no attention.");
+  const opts = [id.meaning, ...wrongs].sort(() => Math.random() - 0.5);
+  const sec = document.getElementById('qsec');
+  sec.innerHTML = `
+    <div class="qq">// WHAT DOES "<strong>${id.phrase}</strong>" MEAN?</div>
+    <div class="qopts">${opts.map(o => `<button class="qopt" onclick="ansQ(this,${JSON.stringify(o)},${JSON.stringify(id.meaning)})">${o}</button>`).join('')}</div>
+  `;
+  sec.className = 'qsec show';
+}
+
+function ansQ(btn, chosen, correct) {
+  if (qa) return;
+  qa = true;
+  document.querySelectorAll('.qopt').forEach(o => {
+    o.disabled = true;
+    if (o.textContent.trim() === correct) o.className = 'qopt correct';
+  });
+  if (chosen === correct) {
+    btn.className = 'qopt correct';
+    qc++;
+    save();
+    updateStats();
+  } else {
+    btn.className = 'qopt wrong';
+  }
+}
+
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('sw.js').catch(() => {});
+}
+
+load();
+popScenes();
+</script>
+</body>
+</html>
