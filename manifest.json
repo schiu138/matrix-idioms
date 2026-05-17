@@ -2,7 +2,7 @@
   "name": "Matrix Idiom Game",
   "short_name": "Matrix Idioms",
   "description": "Learn English idioms through the Matrix trilogy — AI-powered",
-  "start_url": "/index.html",
+  "start_url": "/matrix-idioms/",
   "display": "standalone",
   "background_color": "#0a0a0a",
   "theme_color": "#0a0a0a",
