@@ -698,6 +698,7 @@ Important rules:
   try {
     const r = await fetch("https://api.anthropic.com/v1/messages", {
       method: "POST",
+      mode: "cors",
       headers: {
         "Content-Type": "application/json",
         "x-api-key": API_KEY,
