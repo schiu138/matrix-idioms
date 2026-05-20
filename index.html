@@ -7,7 +7,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black">
 <meta name="apple-mobile-web-app-title" content="Matrix Idioms">
-<meta name="description" content="Learn English idioms through the Matrix trilogy — AI-powered">
+<meta name="description" content="Learn English idioms and vocabulary through the Matrix trilogy — AI-powered">
 <link rel="manifest" href="manifest.json">
 <link rel="icon" href="icon-192.png">
 <link rel="apple-touch-icon" href="icon-192.png">
@@ -27,6 +27,9 @@
   --amber: #ffb700;
   --amber-faint: rgba(255,183,0,0.1);
   --amber-border: rgba(255,183,0,0.3);
+  --blue: #00b4ff;
+  --blue-faint: rgba(0,180,255,0.08);
+  --blue-border: rgba(0,180,255,0.3);
   --red: #ff3333;
   --text: #c8d8c8;
   --text-dim: #6a7a6a;
@@ -56,13 +59,7 @@ body {
   z-index: 999;
 }
 
-.app {
-  max-width: 480px;
-  margin: 0 auto;
-  padding: 0 0 100px;
-  min-height: 100vh;
-  min-height: 100dvh;
-}
+.app { max-width: 480px; margin: 0 auto; padding: 0 0 100px; min-height: 100vh; }
 
 /* Header */
 .hdr {
@@ -77,395 +74,242 @@ body {
   backdrop-filter: blur(8px);
   z-index: 10;
 }
-.hdr-logo {
-  font-family: var(--font-mono);
-  font-size: 14px;
-  color: var(--green);
-  letter-spacing: 0.08em;
-}
+.hdr-logo { font-family: var(--font-mono); font-size: 14px; color: var(--green); letter-spacing: 0.08em; }
 .hdr-logo span { color: var(--text-dim); }
-.hdr-stats {
-  display: flex;
-  gap: 16px;
-}
-.hdr-stat {
-  text-align: right;
-}
-.hdr-stat-num {
-  font-family: var(--font-mono);
-  font-size: 16px;
-  color: var(--green);
-  line-height: 1;
-}
-.hdr-stat-lbl {
-  font-size: 9px;
-  color: var(--text-dim);
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-}
+.hdr-stats { display: flex; gap: 12px; }
+.hdr-stat { text-align: right; }
+.hdr-stat-num { font-family: var(--font-mono); font-size: 15px; color: var(--green); line-height: 1; }
+.hdr-stat-lbl { font-size: 9px; color: var(--text-dim); letter-spacing: 0.1em; text-transform: uppercase; }
 
-/* Content area */
 .content { padding: 16px 20px; }
 
-/* Film selector */
-.film-tabs {
-  display: flex;
-  gap: 6px;
-  margin-bottom: 16px;
-}
-.film-tab {
-  flex: 1;
-  padding: 8px 4px;
+/* Nav tabs — main sections */
+.nav-tabs { display: flex; gap: 4px; margin-bottom: 16px; }
+.nav-tab {
+  flex: 1; padding: 8px 4px;
   border: 1px solid var(--green-border);
-  background: transparent;
-  color: var(--text-dim);
-  font-family: var(--font-mono);
-  font-size: 11px;
-  letter-spacing: 0.05em;
-  cursor: pointer;
-  border-radius: var(--radius);
+  background: transparent; color: var(--text-dim);
+  font-family: var(--font-mono); font-size: 10px;
+  letter-spacing: 0.04em; cursor: pointer;
+  border-radius: var(--radius); text-align: center;
   transition: all 0.15s;
-  text-align: center;
 }
-.film-tab.active {
-  border-color: var(--green);
-  color: var(--green);
-  background: var(--green-faint);
+.nav-tab.active { border-color: var(--green); color: var(--green); background: var(--green-faint); }
+
+/* Film tabs */
+.film-tabs { display: flex; gap: 6px; margin-bottom: 16px; }
+.film-tab {
+  flex: 1; padding: 8px 4px;
+  border: 1px solid var(--green-border);
+  background: transparent; color: var(--text-dim);
+  font-family: var(--font-mono); font-size: 11px;
+  letter-spacing: 0.05em; cursor: pointer;
+  border-radius: var(--radius); transition: all 0.15s; text-align: center;
 }
+.film-tab.active { border-color: var(--green); color: var(--green); background: var(--green-faint); }
+
+/* Learn mode tabs — idioms vs vocab */
+.learn-tabs { display: flex; gap: 6px; margin-bottom: 14px; }
+.learn-tab {
+  flex: 1; padding: 8px 4px;
+  border: 1px solid var(--green-border);
+  background: transparent; color: var(--text-dim);
+  font-family: var(--font-mono); font-size: 11px;
+  cursor: pointer; border-radius: var(--radius);
+  text-align: center; transition: all 0.15s;
+}
+.learn-tab.active { border-color: var(--amber); color: var(--amber); background: var(--amber-faint); }
 
 /* Scene select */
-.scene-wrap {
-  position: relative;
-  margin-bottom: 14px;
-}
-.scene-label {
-  font-size: 10px;
-  color: var(--text-dim);
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  font-family: var(--font-mono);
-  margin-bottom: 6px;
-}
+.scene-wrap { position: relative; margin-bottom: 14px; }
+.scene-label { font-size: 10px; color: var(--text-dim); letter-spacing: 0.12em; text-transform: uppercase; font-family: var(--font-mono); margin-bottom: 6px; }
 .scene-select {
-  width: 100%;
-  padding: 10px 14px;
-  background: var(--bg2);
-  border: 1px solid var(--green-border);
-  color: var(--text);
-  font-family: var(--font-ui);
-  font-size: 14px;
-  border-radius: var(--radius);
-  appearance: none;
-  cursor: pointer;
+  width: 100%; padding: 10px 14px;
+  background: var(--bg2); border: 1px solid var(--green-border);
+  color: var(--text); font-family: var(--font-ui); font-size: 14px;
+  border-radius: var(--radius); appearance: none; cursor: pointer;
 }
 .scene-select:focus { outline: none; border-color: var(--green); }
-.scene-arrow {
-  position: absolute;
-  right: 12px;
-  bottom: 12px;
-  color: var(--green-dim);
-  pointer-events: none;
-  font-family: var(--font-mono);
-  font-size: 12px;
-}
+.scene-arrow { position: absolute; right: 12px; bottom: 12px; color: var(--green-dim); pointer-events: none; font-family: var(--font-mono); font-size: 12px; }
 
 /* Mode tabs */
-.mode-tabs {
-  display: flex;
-  gap: 6px;
-  margin-bottom: 14px;
-}
+.mode-tabs { display: flex; gap: 6px; margin-bottom: 14px; }
 .mode-tab {
-  flex: 1;
-  padding: 7px;
+  flex: 1; padding: 7px;
   border: 1px solid var(--green-border);
-  background: transparent;
-  color: var(--text-dim);
-  font-family: var(--font-mono);
-  font-size: 11px;
-  letter-spacing: 0.08em;
-  cursor: pointer;
-  border-radius: var(--radius);
-  text-align: center;
-  transition: all 0.15s;
+  background: transparent; color: var(--text-dim);
+  font-family: var(--font-mono); font-size: 11px;
+  letter-spacing: 0.08em; cursor: pointer;
+  border-radius: var(--radius); text-align: center; transition: all 0.15s;
 }
-.mode-tab.active {
-  border-color: var(--green);
-  color: var(--green);
-  background: var(--green-faint);
-}
+.mode-tab.active { border-color: var(--green); color: var(--green); background: var(--green-faint); }
 
-/* Generate button */
+/* Gen button */
 .gen-btn {
-  width: 100%;
-  padding: 14px;
-  background: var(--green-faint);
-  border: 1px solid var(--green);
-  color: var(--green);
-  font-family: var(--font-mono);
-  font-size: 13px;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  cursor: pointer;
-  border-radius: var(--radius);
-  margin-bottom: 16px;
-  transition: all 0.15s;
-  position: relative;
-  overflow: hidden;
+  width: 100%; padding: 14px;
+  background: var(--green-faint); border: 1px solid var(--green);
+  color: var(--green); font-family: var(--font-mono); font-size: 13px;
+  letter-spacing: 0.1em; text-transform: uppercase;
+  cursor: pointer; border-radius: var(--radius);
+  margin-bottom: 16px; transition: all 0.15s; position: relative; overflow: hidden;
 }
 .gen-btn:hover { background: rgba(0,255,65,0.15); }
 .gen-btn:active { transform: scale(0.98); }
 .gen-btn:disabled { opacity: 0.3; cursor: default; transform: none; }
 .gen-btn.loading::after {
-  content: '';
-  position: absolute;
-  bottom: 0; left: 0;
-  height: 2px;
-  background: var(--green);
+  content: ''; position: absolute; bottom: 0; left: 0;
+  height: 2px; background: var(--green);
   animation: loadbar 1.5s ease-in-out infinite;
 }
-@keyframes loadbar {
-  0% { width: 0; left: 0; }
-  50% { width: 60%; left: 20%; }
-  100% { width: 0; left: 100%; }
-}
+@keyframes loadbar { 0%{width:0;left:0} 50%{width:60%;left:20%} 100%{width:0;left:100%} }
 
 /* Scene card */
 .scene-card {
-  background: var(--bg2);
-  border: 1px solid var(--green-border);
-  border-radius: var(--radius);
-  padding: 16px;
-  margin-bottom: 14px;
-  min-height: 120px;
+  background: var(--bg2); border: 1px solid var(--green-border);
+  border-radius: var(--radius); padding: 16px;
+  margin-bottom: 14px; min-height: 120px;
 }
-.scene-meta {
-  font-family: var(--font-mono);
-  font-size: 10px;
-  color: var(--text-dim);
-  letter-spacing: 0.08em;
-  margin-bottom: 14px;
-  padding-bottom: 10px;
-  border-bottom: 1px solid var(--text-faint);
-}
-.dline {
-  display: flex;
-  gap: 10px;
-  margin-bottom: 12px;
-  line-height: 1.6;
-}
-.spk {
-  font-family: var(--font-mono);
-  font-size: 10px;
-  color: var(--green-dim);
-  min-width: 72px;
-  padding-top: 3px;
-  flex-shrink: 0;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-}
+.scene-meta { font-family: var(--font-mono); font-size: 10px; color: var(--text-dim); letter-spacing: 0.08em; margin-bottom: 14px; padding-bottom: 10px; border-bottom: 1px solid var(--text-faint); }
+.dline { display: flex; gap: 10px; margin-bottom: 12px; line-height: 1.6; }
+.spk { font-family: var(--font-mono); font-size: 10px; color: var(--green-dim); min-width: 76px; padding-top: 3px; flex-shrink: 0; letter-spacing: 0.05em; text-transform: uppercase; }
 .txt { font-size: 15px; color: var(--text); }
+
+/* Idiom word — amber */
 .iword {
-  background: var(--amber-faint);
-  color: var(--amber);
+  background: var(--amber-faint); color: var(--amber);
   border: 1px solid var(--amber-border);
-  border-radius: 3px;
-  padding: 1px 5px;
-  cursor: pointer;
-  font-family: var(--font-mono);
-  font-size: 13px;
-  display: inline-block;
-  transition: all 0.12s;
+  border-radius: 3px; padding: 1px 5px; cursor: pointer;
+  font-family: var(--font-mono); font-size: 13px;
+  display: inline-block; transition: all 0.12s;
 }
 .iword:active { transform: scale(0.96); }
-.placeholder {
-  font-family: var(--font-mono);
-  font-size: 12px;
-  color: var(--text-dim);
-  text-align: center;
-  padding: 2rem 0;
-  line-height: 1.8;
-}
 
-/* Idiom panel */
+/* Vocab word — blue */
+.vword {
+  background: var(--blue-faint); color: var(--blue);
+  border: 1px solid var(--blue-border);
+  border-radius: 3px; padding: 1px 5px; cursor: pointer;
+  font-family: var(--font-mono); font-size: 13px;
+  display: inline-block; transition: all 0.12s;
+}
+.vword:active { transform: scale(0.96); }
+
+.placeholder { font-family: var(--font-mono); font-size: 12px; color: var(--text-dim); text-align: center; padding: 2rem 0; line-height: 1.8; }
+
+/* Word panel */
 .ipanel {
-  background: var(--bg3);
-  border: 1px solid var(--amber-border);
-  border-radius: var(--radius);
-  padding: 14px 16px;
-  margin-bottom: 14px;
-  display: none;
+  background: var(--bg3); border-radius: var(--radius);
+  padding: 14px 16px; margin-bottom: 14px; display: none;
   animation: fadeIn 0.2s ease;
 }
 .ipanel.show { display: block; }
-@keyframes fadeIn { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: translateY(0); } }
-.i-phrase {
-  font-family: var(--font-mono);
-  font-size: 14px;
-  color: var(--amber);
-  margin-bottom: 8px;
-  letter-spacing: 0.03em;
+.ipanel.idiom-panel { border: 1px solid var(--amber-border); }
+.ipanel.vocab-panel { border: 1px solid var(--blue-border); }
+@keyframes fadeIn { from{opacity:0;transform:translateY(-4px)} to{opacity:1;transform:translateY(0)} }
+
+.i-phrase { font-family: var(--font-mono); font-size: 14px; margin-bottom: 4px; letter-spacing: 0.03em; }
+.i-phrase.amber { color: var(--amber); }
+.i-phrase.blue { color: var(--blue); }
+.i-pronun { font-size: 13px; color: var(--text-dim); font-style: italic; margin-bottom: 8px; font-family: var(--font-mono); }
+.i-speak-btn {
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 4px 10px; border-radius: var(--radius);
+  border: 1px solid var(--green-border); background: var(--green-faint);
+  color: var(--green); font-family: var(--font-mono); font-size: 11px;
+  cursor: pointer; margin-bottom: 10px; letter-spacing: 0.05em;
 }
-.i-meaning {
-  font-size: 14px;
-  color: var(--text);
-  line-height: 1.6;
-  margin-bottom: 10px;
+.i-speak-btn:active { transform: scale(0.96); }
+.i-meaning { font-size: 14px; color: var(--text); line-height: 1.6; margin-bottom: 10px; }
+.i-example { font-size: 13px; color: var(--text-dim); font-style: italic; border-left: 2px solid var(--text-faint); padding-left: 10px; margin-bottom: 10px; line-height: 1.5; }
+.i-hook { font-family: var(--font-mono); font-size: 12px; color: var(--green); background: var(--green-faint); border: 1px solid var(--green-border); border-radius: var(--radius); padding: 8px 10px; line-height: 1.6; margin-bottom: 10px; }
+.i-save-btn {
+  width: 100%; padding: 8px;
+  border: 1px solid var(--green-border); background: transparent;
+  color: var(--text-dim); font-family: var(--font-mono); font-size: 11px;
+  letter-spacing: 0.06em; cursor: pointer; border-radius: var(--radius);
+  text-align: center; transition: all 0.15s;
 }
-.i-example {
-  font-size: 13px;
-  color: var(--text-dim);
-  font-style: italic;
-  border-left: 2px solid var(--text-faint);
-  padding-left: 10px;
-  margin-bottom: 10px;
-  line-height: 1.5;
-}
-.i-hook {
-  font-family: var(--font-mono);
-  font-size: 12px;
-  color: var(--green);
-  background: var(--green-faint);
-  border: 1px solid var(--green-border);
-  border-radius: var(--radius);
-  padding: 8px 10px;
-  line-height: 1.6;
-}
+.i-save-btn:hover { border-color: var(--green); color: var(--green); }
+.i-save-btn.saved { border-color: var(--green); color: var(--green); background: var(--green-faint); }
 
 /* Quiz */
 .qsec {
-  background: var(--bg2);
-  border: 1px solid var(--green-border);
-  border-radius: var(--radius);
-  padding: 14px 16px;
-  margin-bottom: 14px;
-  display: none;
+  background: var(--bg2); border: 1px solid var(--green-border);
+  border-radius: var(--radius); padding: 14px 16px;
+  margin-bottom: 14px; display: none;
 }
 .qsec.show { display: block; }
-.qq {
-  font-family: var(--font-mono);
-  font-size: 12px;
-  color: var(--text);
-  margin-bottom: 12px;
-  line-height: 1.6;
-  letter-spacing: 0.02em;
-}
+.qq { font-family: var(--font-mono); font-size: 12px; color: var(--text); margin-bottom: 12px; line-height: 1.6; letter-spacing: 0.02em; }
 .qq strong { color: var(--amber); }
 .qopts { display: flex; flex-direction: column; gap: 8px; }
 .qopt {
-  padding: 10px 12px;
-  border: 1px solid var(--text-faint);
-  background: transparent;
-  color: var(--text);
-  font-family: var(--font-ui);
-  font-size: 14px;
-  border-radius: var(--radius);
-  cursor: pointer;
-  text-align: left;
-  line-height: 1.5;
-  transition: all 0.12s;
+  padding: 10px 12px; border: 1px solid var(--text-faint);
+  background: transparent; color: var(--text);
+  font-family: var(--font-ui); font-size: 14px;
+  border-radius: var(--radius); cursor: pointer; text-align: left; line-height: 1.5; transition: all 0.12s;
 }
 .qopt:hover { border-color: var(--green-border); background: var(--green-faint); }
 .qopt.correct { border-color: var(--green); background: var(--green-faint); color: var(--green); }
 .qopt.wrong { border-color: var(--red); background: rgba(255,51,51,0.08); color: var(--red); }
 
-/* Bottom nav */
-.brow {
-  display: none;
-  gap: 8px;
-  margin-bottom: 10px;
+/* Word bank */
+.wordbank { display: none; }
+.wordbank.show { display: block; }
+.wb-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+.wb-title { font-family: var(--font-mono); font-size: 13px; color: var(--green); letter-spacing: 0.08em; }
+.wb-clear { font-family: var(--font-mono); font-size: 11px; color: var(--red); background: transparent; border: 1px solid rgba(255,51,51,0.3); padding: 4px 10px; border-radius: var(--radius); cursor: pointer; }
+.wb-filters { display: flex; gap: 6px; margin-bottom: 14px; }
+.wb-filter {
+  flex: 1; padding: 6px;
+  border: 1px solid var(--green-border); background: transparent;
+  color: var(--text-dim); font-family: var(--font-mono); font-size: 10px;
+  cursor: pointer; border-radius: var(--radius); text-align: center;
 }
+.wb-filter.active { border-color: var(--amber); color: var(--amber); background: var(--amber-faint); }
+.wb-empty { font-family: var(--font-mono); font-size: 12px; color: var(--text-dim); text-align: center; padding: 2rem 0; line-height: 1.8; }
+.wb-item {
+  background: var(--bg2); border: 1px solid var(--green-border);
+  border-radius: var(--radius); padding: 12px 14px; margin-bottom: 8px;
+  cursor: pointer; transition: all 0.15s;
+}
+.wb-item:hover { border-color: var(--amber-border); }
+.wb-item-phrase { font-family: var(--font-mono); font-size: 13px; margin-bottom: 4px; }
+.wb-item-phrase.amber { color: var(--amber); }
+.wb-item-phrase.blue { color: var(--blue); }
+.wb-item-meaning { font-size: 13px; color: var(--text-dim); line-height: 1.5; }
+.wb-item-type { font-family: var(--font-mono); font-size: 9px; color: var(--text-faint); margin-top: 4px; text-transform: uppercase; letter-spacing: 0.08em; }
+
+/* Bottom nav */
+.brow { display: none; gap: 8px; margin-bottom: 10px; }
 .brow.show { display: flex; }
 .bbtn {
-  flex: 1;
-  padding: 10px;
-  border: 1px solid var(--green-border);
-  background: transparent;
-  color: var(--text-dim);
-  font-family: var(--font-mono);
-  font-size: 11px;
-  letter-spacing: 0.06em;
-  cursor: pointer;
-  border-radius: var(--radius);
-  text-align: center;
-  transition: all 0.15s;
+  flex: 1; padding: 10px;
+  border: 1px solid var(--green-border); background: transparent;
+  color: var(--text-dim); font-family: var(--font-mono); font-size: 11px;
+  letter-spacing: 0.06em; cursor: pointer; border-radius: var(--radius); text-align: center; transition: all 0.15s;
 }
 .bbtn:hover { border-color: var(--green); color: var(--green); }
 .bbtn:active { transform: scale(0.97); }
 
-.hint {
-  font-family: var(--font-mono);
-  font-size: 11px;
-  color: var(--text-dim);
-  text-align: center;
-  letter-spacing: 0.05em;
-  margin-bottom: 8px;
-}
+.hint { font-family: var(--font-mono); font-size: 11px; color: var(--text-dim); text-align: center; letter-spacing: 0.05em; margin-bottom: 8px; }
 
 /* Install banner */
 .install-banner {
-  margin: 0 20px 16px;
-  padding: 12px 14px;
-  background: var(--green-faint);
-  border: 1px solid var(--green-border);
-  border-radius: var(--radius);
-  display: none;
-  align-items: center;
-  justify-content: space-between;
-  gap: 10px;
+  margin: 0 20px 16px; padding: 12px 14px;
+  background: var(--green-faint); border: 1px solid var(--green-border);
+  border-radius: var(--radius); display: none;
+  align-items: center; justify-content: space-between; gap: 10px;
 }
 .install-banner.show { display: flex; }
-.install-txt {
-  font-family: var(--font-mono);
-  font-size: 11px;
-  color: var(--green);
-  letter-spacing: 0.05em;
-  line-height: 1.5;
-}
-.install-btn {
-  padding: 6px 12px;
-  background: var(--green);
-  color: #000;
-  border: none;
-  font-family: var(--font-mono);
-  font-size: 11px;
-  font-weight: bold;
-  border-radius: var(--radius);
-  cursor: pointer;
-  white-space: nowrap;
-  flex-shrink: 0;
-}
-
-/* Idiom counter row */
-.icount-row {
-  display: flex;
-  gap: 6px;
-  flex-wrap: wrap;
-  margin-bottom: 12px;
-}
-.icount-chip {
-  font-family: var(--font-mono);
-  font-size: 10px;
-  padding: 3px 8px;
-  border-radius: 20px;
-  background: var(--bg3);
-  border: 1px solid var(--text-faint);
-  color: var(--text-dim);
-  letter-spacing: 0.04em;
-}
-.icount-chip.seen {
-  border-color: var(--amber-border);
-  color: var(--amber);
-  background: var(--amber-faint);
-}
+.install-txt { font-family: var(--font-mono); font-size: 11px; color: var(--green); letter-spacing: 0.05em; line-height: 1.5; }
+.install-btn { padding: 6px 12px; background: var(--green); color: #000; border: none; font-family: var(--font-mono); font-size: 11px; font-weight: bold; border-radius: var(--radius); cursor: pointer; white-space: nowrap; flex-shrink: 0; }
 </style>
 </head>
 <body>
 <div class="scanline"></div>
-
 <div class="app">
   <header class="hdr">
-    <div class="hdr-logo">MATRIX<span>//</span>IDIOMS</div>
+    <div class="hdr-logo">MATRIX<span>//</span>LEARN</div>
     <div class="hdr-stats">
       <div class="hdr-stat">
         <div class="hdr-stat-num" id="stat-i">0</div>
@@ -475,53 +319,89 @@ body {
         <div class="hdr-stat-num" id="stat-q">0</div>
         <div class="hdr-stat-lbl">correct</div>
       </div>
+      <div class="hdr-stat">
+        <div class="hdr-stat-num" id="stat-s">0</div>
+        <div class="hdr-stat-lbl">saved</div>
+      </div>
     </div>
   </header>
 
   <div class="install-banner" id="install-banner">
     <div class="install-txt">Add to home screen<br>for app experience</div>
-    <button class="install-btn" id="install-btn" onclick="installApp()">INSTALL</button>
+    <button class="install-btn" onclick="installApp()">INSTALL</button>
   </div>
 
   <div class="content">
 
-    <div class="film-tabs">
-      <button class="film-tab active" onclick="selFilm(0)" id="fb0">MATRIX I</button>
-      <button class="film-tab" onclick="selFilm(1)" id="fb1">RELOADED</button>
-      <button class="film-tab" onclick="selFilm(2)" id="fb2">REVOLUTIONS</button>
+    <!-- Main navigation -->
+    <div class="nav-tabs">
+      <button class="nav-tab active" onclick="setNav('learn')" id="nt-learn">[ LEARN ]</button>
+      <button class="nav-tab" onclick="setNav('bank')" id="nt-bank">[ WORD BANK ]</button>
     </div>
 
-    <div class="scene-wrap">
-      <div class="scene-label">// select scene</div>
-      <select class="scene-select" id="ssel" onchange="onSC()"></select>
-      <div class="scene-arrow">▾</div>
+    <!-- LEARN SECTION -->
+    <div id="learn-section">
+
+      <div class="film-tabs">
+        <button class="film-tab active" onclick="selFilm(0)" id="fb0">MATRIX I</button>
+        <button class="film-tab" onclick="selFilm(1)" id="fb1">RELOADED</button>
+        <button class="film-tab" onclick="selFilm(2)" id="fb2">REVOLUTIONS</button>
+      </div>
+
+      <!-- Learn type: idioms vs vocabulary -->
+      <div class="learn-tabs">
+        <button class="learn-tab active" onclick="setLearnType('idioms')" id="lt-idioms">🎭 IDIOMS</button>
+        <button class="learn-tab" onclick="setLearnType('vocab')" id="lt-vocab">📚 VOCABULARY</button>
+        <button class="learn-tab" onclick="setLearnType('both')" id="lt-both">⚡ BOTH</button>
+      </div>
+
+      <div class="scene-wrap">
+        <div class="scene-label">// select scene</div>
+        <select class="scene-select" id="ssel" onchange="onSC()"></select>
+        <div class="scene-arrow">▾</div>
+      </div>
+
+      <div class="mode-tabs">
+        <button class="mode-tab active" onclick="setMode('story')" id="t-story">[ STORY MODE ]</button>
+        <button class="mode-tab" onclick="setMode('quiz')" id="t-quiz">[ QUIZ MODE ]</button>
+      </div>
+
+      <button class="gen-btn" id="gbtn" onclick="gen()">▶ GENERATE SCENE</button>
+
+      <div class="scene-card" id="scard">
+        <div class="placeholder">// SYSTEM READY<br>SELECT A SCENE AND GENERATE<br>TO BEGIN TRAINING</div>
+      </div>
+
+      <div class="ipanel" id="ipanel"></div>
+      <div class="qsec" id="qsec"></div>
+
+      <div class="brow" id="brow">
+        <button class="bbtn" onclick="gen()">↺ REGENERATE</button>
+        <button class="bbtn" onclick="nextSc()">NEXT SCENE ▶</button>
+      </div>
+      <div class="hint" id="hint"></div>
+
     </div>
 
-    <div class="mode-tabs">
-      <button class="mode-tab active" onclick="setMode('story')" id="t-story">[ STORY MODE ]</button>
-      <button class="mode-tab" onclick="setMode('quiz')" id="t-quiz">[ QUIZ MODE ]</button>
+    <!-- WORD BANK SECTION -->
+    <div id="bank-section" class="wordbank">
+      <div class="wb-header">
+        <div class="wb-title">// YOUR WORD BANK</div>
+        <button class="wb-clear" onclick="clearBank()">CLEAR ALL</button>
+      </div>
+      <div class="wb-filters">
+        <button class="wb-filter active" onclick="setWbFilter('all')" id="wf-all">ALL</button>
+        <button class="wb-filter" onclick="setWbFilter('idioms')" id="wf-idioms">IDIOMS</button>
+        <button class="wb-filter" onclick="setWbFilter('vocab')" id="wf-vocab">VOCAB</button>
+      </div>
+      <div id="wb-list"></div>
     </div>
-
-    <button class="gen-btn" id="gbtn" onclick="gen()">▶ GENERATE SCENE</button>
-
-    <div class="scene-card" id="scard">
-      <div class="placeholder">// SYSTEM READY<br>SELECT A SCENE AND GENERATE<br>TO BEGIN TRAINING</div>
-    </div>
-
-    <div class="ipanel" id="ipanel"></div>
-    <div class="qsec" id="qsec"></div>
-
-    <div class="brow" id="brow">
-      <button class="bbtn" onclick="gen()">↺ REGENERATE</button>
-      <button class="bbtn" onclick="nextSc()">NEXT SCENE ▶</button>
-    </div>
-    <div class="hint" id="hint"></div>
 
   </div>
 </div>
 
 <script>
-const API_KEY = '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';
+const PROXY = 'https://matrix-idioms-proxy.sammychiu1.workers.dev';
 
 const F = [
   {
@@ -586,214 +466,287 @@ const F = [
   }
 ];
 
-let cf = 0, csi = 0, mode = 'story';
-let sp = 0, il = new Set(), qc = 0;
-let lastI = [], aik = null, qa = false;
-let deferredPrompt = null;
+let cf=0, csi=0, mode='story', learnType='idioms';
+let sp=0, il=new Set(), qc=0;
+let lastI=[], aik=null, qa=false;
+let wordBank=[], wbFilter='all';
+let deferredPrompt=null;
 
+// --- PWA Install ---
 window.addEventListener('beforeinstallprompt', e => {
-  e.preventDefault();
-  deferredPrompt = e;
-  document.getElementById('install-banner').className = 'install-banner show';
+  e.preventDefault(); deferredPrompt=e;
+  document.getElementById('install-banner').className='install-banner show';
 });
-
 function installApp() {
-  if (!deferredPrompt) return;
+  if(!deferredPrompt) return;
   deferredPrompt.prompt();
-  deferredPrompt.userChoice.then(() => {
-    deferredPrompt = null;
-    document.getElementById('install-banner').className = 'install-banner';
-  });
+  deferredPrompt.userChoice.then(()=>{ deferredPrompt=null; document.getElementById('install-banner').className='install-banner'; });
 }
 
+// --- Persistence ---
 function save() {
   try {
     localStorage.setItem('mx_il', JSON.stringify([...il]));
     localStorage.setItem('mx_qc', qc);
     localStorage.setItem('mx_sp', sp);
-  } catch(e) {}
+    localStorage.setItem('mx_wb', JSON.stringify(wordBank));
+  } catch(e){}
 }
-
 function load() {
   try {
-    const saved = localStorage.getItem('mx_il');
-    if (saved) { il = new Set(JSON.parse(saved)); }
-    qc = parseInt(localStorage.getItem('mx_qc') || '0');
-    sp = parseInt(localStorage.getItem('mx_sp') || '0');
+    const saved=localStorage.getItem('mx_il');
+    if(saved) il=new Set(JSON.parse(saved));
+    qc=parseInt(localStorage.getItem('mx_qc')||'0');
+    sp=parseInt(localStorage.getItem('mx_sp')||'0');
+    const wb=localStorage.getItem('mx_wb');
+    if(wb) wordBank=JSON.parse(wb);
     updateStats();
-  } catch(e) {}
+  } catch(e){}
+}
+function updateStats() {
+  document.getElementById('stat-i').textContent=il.size;
+  document.getElementById('stat-q').textContent=qc;
+  document.getElementById('stat-s').textContent=wordBank.length;
 }
 
-function updateStats() {
-  document.getElementById('stat-i').textContent = il.size;
-  document.getElementById('stat-q').textContent = qc;
+// --- Navigation ---
+function setNav(n) {
+  document.getElementById('nt-learn').className='nav-tab'+(n==='learn'?' active':'');
+  document.getElementById('nt-bank').className='nav-tab'+(n==='bank'?' active':'');
+  document.getElementById('learn-section').style.display=n==='learn'?'block':'none';
+  document.getElementById('bank-section').className='wordbank'+(n==='bank'?' show':'');
+  if(n==='bank') renderBank();
 }
 
 function setMode(m) {
-  mode = m;
-  document.getElementById('t-story').className = 'mode-tab' + (m === 'story' ? ' active' : '');
-  document.getElementById('t-quiz').className = 'mode-tab' + (m === 'quiz' ? ' active' : '');
-  document.getElementById('qsec').className = 'qsec';
-  document.getElementById('ipanel').className = 'ipanel';
-  if (m === 'quiz' && lastI.length > 0) showQ();
-  else if (m === 'quiz') document.getElementById('hint').textContent = '// generate a scene first';
+  mode=m;
+  document.getElementById('t-story').className='mode-tab'+(m==='story'?' active':'');
+  document.getElementById('t-quiz').className='mode-tab'+(m==='quiz'?' active':'');
+  document.getElementById('qsec').className='qsec';
+  document.getElementById('ipanel').className='ipanel';
+  if(m==='quiz'&&lastI.length>0) showQ();
+  else if(m==='quiz') document.getElementById('hint').textContent='// generate a scene first';
+}
+
+function setLearnType(t) {
+  learnType=t;
+  ['idioms','vocab','both'].forEach(x=>{
+    document.getElementById('lt-'+x).className='learn-tab'+(x===t?' active':'');
+  });
 }
 
 function selFilm(i) {
-  cf = i;
-  [0, 1, 2].forEach(j => document.getElementById('fb' + j).className = 'film-tab' + (j === i ? ' active' : ''));
+  cf=i;
+  [0,1,2].forEach(j=>document.getElementById('fb'+j).className='film-tab'+(j===i?' active':''));
   popScenes();
 }
-
 function popScenes() {
-  const s = document.getElementById('ssel');
-  s.innerHTML = '';
-  F[cf].scenes.forEach((sc, i) => {
-    const o = document.createElement('option');
-    o.value = i;
-    o.textContent = (i + 1) + '. ' + sc;
-    s.appendChild(o);
+  const s=document.getElementById('ssel'); s.innerHTML='';
+  F[cf].scenes.forEach((sc,i)=>{
+    const o=document.createElement('option'); o.value=i; o.textContent=(i+1)+'. '+sc; s.appendChild(o);
   });
-  csi = 0;
+  csi=0;
 }
+function onSC() { csi=parseInt(document.getElementById('ssel').value); }
+function nextSc() { csi=(csi+1)%F[cf].scenes.length; document.getElementById('ssel').value=csi; gen(); }
 
-function onSC() {
-  csi = parseInt(document.getElementById('ssel').value);
-}
-
-function nextSc() {
-  csi = (csi + 1) % F[cf].scenes.length;
-  document.getElementById('ssel').value = csi;
-  gen();
-}
-
+// --- Generate ---
 async function gen() {
-  const film = F[cf];
-  const sname = film.scenes[csi];
-  const btn = document.getElementById('gbtn');
-  btn.disabled = true;
-  btn.className = 'gen-btn loading';
-  btn.textContent = '▶ GENERATING...';
-  document.getElementById('brow').className = 'brow';
-  document.getElementById('hint').textContent = '';
-  document.getElementById('ipanel').className = 'ipanel';
-  document.getElementById('qsec').className = 'qsec';
-  document.getElementById('scard').innerHTML = '<div class="placeholder">// AI IS WRITING THE SCENE...<br>PLEASE STAND BY</div>';
-  aik = null; lastI = [];
+  const film=F[cf]; const sname=film.scenes[csi];
+  const btn=document.getElementById('gbtn');
+  btn.disabled=true; btn.className='gen-btn loading'; btn.textContent='▶ GENERATING...';
+  document.getElementById('brow').className='brow';
+  document.getElementById('hint').textContent='';
+  document.getElementById('ipanel').className='ipanel';
+  document.getElementById('qsec').className='qsec';
+  document.getElementById('scard').innerHTML='<div class="placeholder">// AI IS WRITING THE SCENE...<br>PLEASE STAND BY</div>';
+  aik=null; lastI=[];
 
-  const prompt = `You are writing for an English idiom learning game set in "${film.title}", scene: "${sname}".
-
-Write 4-6 dialogue lines between Matrix characters from this scene. Embed exactly 4 different common English idioms naturally into the dialogue. The idioms must feel like natural speech, not forced.
-
-Respond ONLY with valid JSON (no markdown, no explanation):
-{"scene_title":"short evocative title","lines":[{"speaker":"Character Name","text":"dialogue with idiom naturally woven in"}],"idioms":[{"phrase":"exact idiom phrase as it appears in text","meaning":"clear simple meaning in 1-2 sentences","example":"a fresh example sentence using this idiom in a completely different context","hook":"a vivid memorable hook to remember this idiom — start with a brain or lightning bolt symbol"}]}
-
-Important rules:
-- Use real Matrix character names (Neo, Morpheus, Trinity, Agent Smith, Oracle, Tank, Cypher, Niobe, Ghost, The Architect, The Merovingian, Sati, etc.)
-- Each idiom must appear word-for-word in one of the dialogue lines
-- Match each character's personality and speech style
-- Make the scene dramatic and true to the film's tone
-- Vary the idioms — use a mix of common everyday idioms`;
-
-  try {
-    const r = await fetch("https://matrix-idioms-proxy.sammychiu1.workers.dev", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        model: "claude-sonnet-4-5",
-        max_tokens: 1000,
-        messages: [{ role: "user", content: prompt }]
-      })
-    });
-    const d = await r.json();
-    if (!r.ok) throw new Error(d.error?.message || 'API error');
-    const raw = d.content.map(b => b.text || '').join('');
-    const parsed = JSON.parse(raw.replace(/```json|```/g, '').trim());
-    renderSc(parsed, film.title, sname);
-    sp++;
-    save();
-    document.getElementById('brow').className = 'brow show';
-    document.getElementById('hint').textContent = '// tap amber text to learn the idiom';
-    if (mode === 'quiz') showQ();
-  } catch (e) {
-    document.getElementById('scard').innerHTML = `<div class="placeholder">// ERROR: ${e.message}<br>CHECK API KEY IN index.html<br>THEN TRY AGAIN</div>`;
+  let promptContent = '';
+  if(learnType==='idioms') {
+    promptContent = `Embed exactly 4 different common English idioms naturally into the dialogue. Label each in the JSON as type "idiom".`;
+  } else if(learnType==='vocab') {
+    promptContent = `Embed exactly 4 different sophisticated professional vocabulary words naturally into the dialogue. Choose words that educated professionals use — words like perspicacious, sanguine, obfuscate, equivocate, magnanimous, perfidious, cogent, laconic, prescient, inimitable, etc. Label each in the JSON as type "vocab". Include the phonetic pronunciation for each word.`;
+  } else {
+    promptContent = `Embed exactly 2 common English idioms AND 2 sophisticated professional vocabulary words naturally into the dialogue. Label idioms as type "idiom" and vocabulary words as type "vocab". Include phonetic pronunciation for vocab words.`;
   }
 
-  btn.disabled = false;
-  btn.className = 'gen-btn';
-  btn.textContent = '▶ GENERATE SCENE';
+  const prompt = `You are writing for an English language learning game set in "${film.title}", scene: "${sname}".
+
+Write 4-6 dialogue lines between Matrix characters from this scene. ${promptContent}
+
+Respond ONLY with valid JSON (no markdown):
+{"scene_title":"short title","lines":[{"speaker":"Character Name","text":"dialogue"}],"words":[{"phrase":"exact word or phrase as in text","type":"idiom or vocab","pronunciation":"phonetic guide e.g. per-SPI-kyoo-us (only for vocab, empty string for idioms)","meaning":"clear simple meaning in 1-2 sentences","example":"fresh example in a different professional context","hook":"vivid memory hook starting with brain or lightning symbol"}]}
+
+Rules: use real Matrix character names, match character personalities, make it dramatic, each word/phrase must appear verbatim in dialogue.`;
+
+  try {
+    const r=await fetch(PROXY, {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        model:'claude-sonnet-4-5',
+        max_tokens:1200,
+        messages:[{role:'user',content:prompt}]
+      })
+    });
+    const d=await r.json();
+    if(!r.ok) throw new Error(d.error?.message||'API error');
+    const raw=d.content.map(b=>b.text||'').join('');
+    const parsed=JSON.parse(raw.replace(/```json|```/g,'').trim());
+    renderSc(parsed, film.title, sname);
+    sp++; save();
+    document.getElementById('brow').className='brow show';
+    const hint = learnType==='vocab' ? '// tap blue words · idioms in amber' : learnType==='both' ? '// amber = idiom · blue = vocabulary' : '// tap amber text to learn the idiom';
+    document.getElementById('hint').textContent=hint;
+    if(mode==='quiz') showQ();
+  } catch(e) {
+    document.getElementById('scard').innerHTML=`<div class="placeholder">// ERROR: ${e.message}<br>TRY AGAIN</div>`;
+  }
+  btn.disabled=false; btn.className='gen-btn'; btn.textContent='▶ GENERATE SCENE';
 }
 
 function renderSc(data, ftitle, sname) {
-  lastI = data.idioms || [];
-  let html = `<div class="scene-meta">// ${ftitle.toUpperCase()} &nbsp;·&nbsp; ${sname.toUpperCase()}</div>`;
-  data.lines.forEach(line => {
-    let txt = line.text;
-    lastI.forEach((id, idx) => {
-      if (txt.toLowerCase().includes(id.phrase.toLowerCase())) {
-        const rx = new RegExp(id.phrase.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'gi');
-        txt = txt.replace(rx, `<span class="iword" onclick="showI(${idx})">${id.phrase}</span>`);
+  lastI=data.words||[];
+  let html=`<div class="scene-meta">// ${ftitle.toUpperCase()} &nbsp;·&nbsp; ${sname.toUpperCase()}</div>`;
+  data.lines.forEach(line=>{
+    let txt=line.text;
+    lastI.forEach((wd,idx)=>{
+      if(txt.toLowerCase().includes(wd.phrase.toLowerCase())) {
+        const rx=new RegExp(wd.phrase.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'),'gi');
+        const cls=wd.type==='vocab'?'vword':'iword';
+        txt=txt.replace(rx,`<span class="${cls}" onclick="showI(${idx})">${wd.phrase}</span>`);
       }
     });
-    html += `<div class="dline"><span class="spk">${line.speaker}</span><span class="txt">${txt}</span></div>`;
+    html+=`<div class="dline"><span class="spk">${line.speaker}</span><span class="txt">${txt}</span></div>`;
   });
-  document.getElementById('scard').innerHTML = html;
+  document.getElementById('scard').innerHTML=html;
 }
 
+// --- Pronunciation ---
+function speak(text) {
+  if(!('speechSynthesis' in window)) return;
+  window.speechSynthesis.cancel();
+  const u=new SpeechSynthesisUtterance(text);
+  u.lang='en-US'; u.rate=0.85; u.pitch=1;
+  window.speechSynthesis.speak(u);
+}
+
+// --- Show word panel ---
 function showI(idx) {
-  const p = document.getElementById('ipanel');
-  if (aik === idx) { p.className = 'ipanel'; aik = null; return; }
-  aik = idx;
-  const d = lastI[idx];
-  p.innerHTML = `
-    <div class="i-phrase">// "${d.phrase}"</div>
-    <div class="i-meaning">${d.meaning}</div>
-    <div class="i-example">${d.example}</div>
-    <div class="i-hook">${d.hook}</div>
-  `;
-  p.className = 'ipanel show';
-  il.add(d.phrase);
-  save();
-  updateStats();
-  p.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-}
+  const p=document.getElementById('ipanel');
+  if(aik===idx){p.className='ipanel';aik=null;return;}
+  aik=idx;
+  const d=lastI[idx];
+  const isVocab=d.type==='vocab';
+  const color=isVocab?'blue':'amber';
+  const alreadySaved=wordBank.some(w=>w.phrase===d.phrase);
 
-function showQ() {
-  if (!lastI.length) return;
-  qa = false;
-  const id = lastI[Math.floor(Math.random() * lastI.length)];
-  const wrongs = lastI.filter(i => i.phrase !== id.phrase).slice(0, 2).map(i => i.meaning);
-  while (wrongs.length < 2) wrongs.push("To ignore something completely and pay it no attention.");
-  const opts = [id.meaning, ...wrongs].sort(() => Math.random() - 0.5);
-  const sec = document.getElementById('qsec');
-  sec.innerHTML = `
-    <div class="qq">// WHAT DOES "<strong>${id.phrase}</strong>" MEAN?</div>
-    <div class="qopts">${opts.map(o => `<button class="qopt" onclick="ansQ(this,${JSON.stringify(o)},${JSON.stringify(id.meaning)})">${o}</button>`).join('')}</div>
-  `;
-  sec.className = 'qsec show';
-}
-
-function ansQ(btn, chosen, correct) {
-  if (qa) return;
-  qa = true;
-  document.querySelectorAll('.qopt').forEach(o => {
-    o.disabled = true;
-    if (o.textContent.trim() === correct) o.className = 'qopt correct';
-  });
-  if (chosen === correct) {
-    btn.className = 'qopt correct';
-    qc++;
-    save();
-    updateStats();
-  } else {
-    btn.className = 'qopt wrong';
+  let html=`<div class="i-phrase ${color}">// "${d.phrase}"</div>`;
+  if(isVocab&&d.pronunciation) {
+    html+=`<div class="i-pronun">${d.pronunciation}</div>`;
   }
+  html+=`<button class="i-speak-btn" onclick="speak('${d.phrase.replace(/'/g,"\\'")}')">🔊 HEAR IT</button>`;
+  html+=`<div class="i-meaning">${d.meaning}</div>`;
+  html+=`<div class="i-example">${d.example}</div>`;
+  html+=`<div class="i-hook">${d.hook}</div>`;
+  html+=`<button class="i-save-btn${alreadySaved?' saved':''}" id="save-btn-${idx}" onclick="saveWord(${idx})">${alreadySaved?'✓ SAVED TO WORD BANK':'+ SAVE TO WORD BANK'}</button>`;
+
+  p.innerHTML=html;
+  p.className=`ipanel show ${isVocab?'vocab-panel':'idiom-panel'}`;
+  il.add(d.phrase); save(); updateStats();
+  p.scrollIntoView({behavior:'smooth',block:'nearest'});
 }
 
-if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('sw.js').catch(() => {});
+function saveWord(idx) {
+  const d=lastI[idx];
+  if(wordBank.some(w=>w.phrase===d.phrase)) return;
+  wordBank.push({...d, savedAt: Date.now()});
+  save(); updateStats();
+  const btn=document.getElementById('save-btn-'+idx);
+  if(btn){btn.textContent='✓ SAVED TO WORD BANK'; btn.className='i-save-btn saved';}
+}
+
+// --- Quiz ---
+function showQ() {
+  if(!lastI.length) return;
+  qa=false;
+  const id=lastI[Math.floor(Math.random()*lastI.length)];
+  const wrongs=lastI.filter(i=>i.phrase!==id.phrase).slice(0,2).map(i=>i.meaning);
+  while(wrongs.length<2) wrongs.push("To express disagreement in a subtle and indirect manner.");
+  const opts=[id.meaning,...wrongs].sort(()=>Math.random()-0.5);
+  const label=id.type==='vocab'?'WHAT DOES THIS WORD MEAN?':'WHAT DOES THIS IDIOM MEAN?';
+  const sec=document.getElementById('qsec');
+  sec.innerHTML=`
+    <div class="qq">// ${label} "<strong>${id.phrase}</strong>"
+      <button class="i-speak-btn" style="margin-left:8px;display:inline-flex" onclick="speak('${id.phrase.replace(/'/g,"\\'")}')">🔊</button>
+    </div>
+    <div class="qopts">${opts.map(o=>`<button class="qopt" onclick="ansQ(this,${JSON.stringify(o)},${JSON.stringify(id.meaning)})">${o}</button>`).join('')}</div>
+  `;
+  sec.className='qsec show';
+}
+
+function ansQ(btn,chosen,correct) {
+  if(qa) return; qa=true;
+  document.querySelectorAll('.qopt').forEach(o=>{
+    o.disabled=true;
+    if(o.textContent.trim()===correct) o.className='qopt correct';
+  });
+  if(chosen===correct){btn.className='qopt correct';qc++;save();updateStats();}
+  else btn.className='qopt wrong';
+}
+
+// --- Word Bank ---
+function setWbFilter(f) {
+  wbFilter=f;
+  ['all','idioms','vocab'].forEach(x=>document.getElementById('wf-'+x).className='wb-filter'+(x===f?' active':''));
+  renderBank();
+}
+
+function renderBank() {
+  const list=document.getElementById('wb-list');
+  let items=wordBank;
+  if(wbFilter==='idioms') items=wordBank.filter(w=>w.type==='idiom');
+  if(wbFilter==='vocab') items=wordBank.filter(w=>w.type==='vocab');
+  if(!items.length){
+    list.innerHTML=`<div class="wb-empty">// WORD BANK EMPTY<br>${wbFilter==='all'?'Save words from any scene to build your collection':'No '+wbFilter+' saved yet'}</div>`;
+    return;
+  }
+  list.innerHTML=items.map((w,i)=>`
+    <div class="wb-item" onclick="expandWb(${wordBank.indexOf(w)})">
+      <div class="wb-item-phrase ${w.type==='vocab'?'blue':'amber'}">${w.phrase}</div>
+      <div class="wb-item-meaning">${w.meaning.substring(0,80)}${w.meaning.length>80?'...':''}</div>
+      <div class="wb-item-type">${w.type==='vocab'?'📚 vocabulary':'🎭 idiom'}</div>
+    </div>
+  `).join('');
+}
+
+function expandWb(idx) {
+  const d=wordBank[idx];
+  if(!d) return;
+  const isVocab=d.type==='vocab';
+  const color=isVocab?'blue':'amber';
+  setNav('learn');
+  const p=document.getElementById('ipanel');
+  let html=`<div class="i-phrase ${color}">// "${d.phrase}"</div>`;
+  if(isVocab&&d.pronunciation) html+=`<div class="i-pronun">${d.pronunciation}</div>`;
+  html+=`<button class="i-speak-btn" onclick="speak('${d.phrase.replace(/'/g,"\\'")}')">🔊 HEAR IT</button>`;
+  html+=`<div class="i-meaning">${d.meaning}</div>`;
+  html+=`<div class="i-example">${d.example}</div>`;
+  html+=`<div class="i-hook">${d.hook}</div>`;
+  html+=`<button class="i-save-btn saved">✓ SAVED</button>`;
+  p.innerHTML=html;
+  p.className=`ipanel show ${isVocab?'vocab-panel':'idiom-panel'}`;
+  p.scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+
+function clearBank() {
+  if(!confirm('Clear all saved words?')) return;
+  wordBank=[]; save(); updateStats(); renderBank();
+}
+
+if('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('sw.js').catch(()=>{});
 }
 
 load();
