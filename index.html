@@ -627,18 +627,50 @@ function renderSc(data, ftitle, sname) {
       }
     });
     const plainText=line.text.replace(/'/g,"\\'");
-    html+=`<div class="dline"><span class="spk">${line.speaker}</span><span class="txt">${txt}</span><button class="line-speak" onclick="speak('${plainText}')" title="Hear this line">🔊</button></div>`;
+    const spkName=line.speaker.replace(/'/g,"\\'");
+    html+=`<div class="dline"><span class="spk">${line.speaker}</span><span class="txt">${txt}</span><button class="line-speak" onclick="speak('${plainText}','${spkName}')" title="Hear this line">🔊</button></div>`;
   });
   document.getElementById('scard').innerHTML=html;
 }
 
 // --- Pronunciation ---
-function speak(text) {
+const FEMALE_CHARS = ['trinity','oracle','niobe','sati','woman','persephone'];
+
+function getVoice(isFemale) {
+  const voices = window.speechSynthesis.getVoices();
+  const lang = voices.filter(v => v.lang.startsWith('en'));
+  if(isFemale) {
+    return lang.find(v => /female|woman|zira|samantha|victoria|karen|moira|tessa|fiona/i.test(v.name))
+        || lang.find(v => !/male|man|david|mark|daniel|alex|fred|george/i.test(v.name) && v.default)
+        || lang[0] || null;
+  } else {
+    return lang.find(v => /male|man|david|mark|daniel|alex|fred|george/i.test(v.name))
+        || lang.find(v => !/female|woman|zira|samantha|victoria|karen/i.test(v.name) && v.default)
+        || lang[0] || null;
+  }
+}
+
+function speak(text, speakerName) {
   if(!('speechSynthesis' in window)) return;
   window.speechSynthesis.cancel();
-  const u=new SpeechSynthesisUtterance(text);
-  u.lang='en-US'; u.rate=0.85; u.pitch=1;
-  window.speechSynthesis.speak(u);
+  const u = new SpeechSynthesisUtterance(text);
+  u.lang = 'en-US';
+  u.rate = 0.85;
+  u.pitch = 1;
+  const isFemale = speakerName
+    ? FEMALE_CHARS.some(f => speakerName.toLowerCase().includes(f))
+    : false;
+  const doSpeak = () => {
+    const v = getVoice(isFemale);
+    if(v) u.voice = v;
+    u.pitch = isFemale ? 1.15 : 0.9;
+    window.speechSynthesis.speak(u);
+  };
+  if(window.speechSynthesis.getVoices().length === 0) {
+    window.speechSynthesis.onvoiceschanged = doSpeak;
+  } else {
+    doSpeak();
+  }
 }
 
 // --- Show word panel ---
@@ -688,7 +720,7 @@ function showQ() {
   const sec=document.getElementById('qsec');
   sec.innerHTML=`
     <div class="qq">// ${label} "<strong>${id.phrase}</strong>"
-      <button class="i-speak-btn" style="margin-left:8px;display:inline-flex" onclick="speak('${id.phrase.replace(/'/g,"\\'")}')">🔊</button>
+      <button class="i-speak-btn" style="margin-left:8px;display:inline-flex" onclick="speak('${id.phrase.replace(/'/g,"\\'")}', null)">🔊</button>
     </div>
     <div class="qopts">${opts.map(o=>`<button class="qopt" onclick="ansQ(this,${JSON.stringify(o)},${JSON.stringify(id.meaning)})">${o}</button>`).join('')}</div>
   `;
