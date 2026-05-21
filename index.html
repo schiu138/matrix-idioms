@@ -172,7 +172,15 @@ body {
 .scene-meta { font-family: var(--font-mono); font-size: 10px; color: var(--text-dim); letter-spacing: 0.08em; margin-bottom: 14px; padding-bottom: 10px; border-bottom: 1px solid var(--text-faint); }
 .dline { display: flex; gap: 10px; margin-bottom: 12px; line-height: 1.6; }
 .spk { font-family: var(--font-mono); font-size: 10px; color: var(--green-dim); min-width: 76px; padding-top: 3px; flex-shrink: 0; letter-spacing: 0.05em; text-transform: uppercase; }
-.txt { font-size: 15px; color: var(--text); }
+.txt { font-size: 15px; color: var(--text); flex: 1; }
+.line-speak {
+  background: transparent; border: none;
+  font-size: 16px; cursor: pointer; opacity: 0.4;
+  padding: 0 0 0 6px; flex-shrink: 0;
+  transition: opacity 0.15s; align-self: flex-start; padding-top: 2px;
+}
+.line-speak:hover { opacity: 1; }
+.line-speak:active { transform: scale(0.9); }
 
 /* Idiom word — amber */
 .iword {
@@ -618,7 +626,8 @@ function renderSc(data, ftitle, sname) {
         txt=txt.replace(rx,`<span class="${cls}" onclick="showI(${idx})">${wd.phrase}</span>`);
       }
     });
-    html+=`<div class="dline"><span class="spk">${line.speaker}</span><span class="txt">${txt}</span></div>`;
+    const plainText=line.text.replace(/'/g,"\\'");
+    html+=`<div class="dline"><span class="spk">${line.speaker}</span><span class="txt">${txt}</span><button class="line-speak" onclick="speak('${plainText}')" title="Hear this line">🔊</button></div>`;
   });
   document.getElementById('scard').innerHTML=html;
 }
