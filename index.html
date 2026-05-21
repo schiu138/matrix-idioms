@@ -181,6 +181,14 @@ body {
 }
 .line-speak:hover { opacity: 1; }
 .line-speak:active { transform: scale(0.9); }
+.inline-speak {
+  background: transparent; border: none;
+  font-size: 13px; cursor: pointer; opacity: 0.5;
+  padding: 0 0 0 4px; vertical-align: middle;
+  transition: opacity 0.15s;
+}
+.inline-speak:hover { opacity: 1; }
+.inline-speak:active { transform: scale(0.9); }
 
 /* Idiom word — amber */
 .iword {
@@ -683,14 +691,15 @@ function showI(idx) {
   const color=isVocab?'blue':'amber';
   const alreadySaved=wordBank.some(w=>w.phrase===d.phrase);
 
+  const esc = t => t.replace(/'/g,"\\'");
   let html=`<div class="i-phrase ${color}">// "${d.phrase}"</div>`;
   if(isVocab&&d.pronunciation) {
     html+=`<div class="i-pronun">${d.pronunciation}</div>`;
   }
-  html+=`<button class="i-speak-btn" onclick="speak('${d.phrase.replace(/'/g,"\\'")}')">🔊 HEAR IT</button>`;
+  html+=`<button class="i-speak-btn" onclick="speak('${esc(d.phrase)}', null)">🔊 HEAR IT</button>`;
   html+=`<div class="i-meaning">${d.meaning}</div>`;
-  html+=`<div class="i-example">${d.example}</div>`;
-  html+=`<div class="i-hook">${d.hook}</div>`;
+  html+=`<div class="i-example">${d.example} <button class="inline-speak" onclick="speak('${esc(d.example)}', null)" title="Hear example">🔊</button></div>`;
+  html+=`<div class="i-hook">${d.hook} <button class="inline-speak" onclick="speak('${esc(d.hook.replace(/^[\u26a1\u{1f9e0}\u{1f4a1}]+\s*/u,''))}', null)" title="Hear memory hook">🔊</button></div>`;
   html+=`<button class="i-save-btn${alreadySaved?' saved':''}" id="save-btn-${idx}" onclick="saveWord(${idx})">${alreadySaved?'✓ SAVED TO WORD BANK':'+ SAVE TO WORD BANK'}</button>`;
 
   p.innerHTML=html;
@@ -769,12 +778,13 @@ function expandWb(idx) {
   const color=isVocab?'blue':'amber';
   setNav('learn');
   const p=document.getElementById('ipanel');
+  const esc2 = t => t.replace(/'/g,"\\'");
   let html=`<div class="i-phrase ${color}">// "${d.phrase}"</div>`;
   if(isVocab&&d.pronunciation) html+=`<div class="i-pronun">${d.pronunciation}</div>`;
-  html+=`<button class="i-speak-btn" onclick="speak('${d.phrase.replace(/'/g,"\\'")}')">🔊 HEAR IT</button>`;
+  html+=`<button class="i-speak-btn" onclick="speak('${esc2(d.phrase)}', null)">🔊 HEAR IT</button>`;
   html+=`<div class="i-meaning">${d.meaning}</div>`;
-  html+=`<div class="i-example">${d.example}</div>`;
-  html+=`<div class="i-hook">${d.hook}</div>`;
+  html+=`<div class="i-example">${d.example} <button class="inline-speak" onclick="speak('${esc2(d.example)}', null)">🔊</button></div>`;
+  html+=`<div class="i-hook">${d.hook} <button class="inline-speak" onclick="speak('${esc2(d.hook.replace(/^[\u26a1\u{1f9e0}\u{1f4a1}]+\s*/u,''))}', null)">🔊</button></div>`;
   html+=`<button class="i-save-btn saved">✓ SAVED</button>`;
   p.innerHTML=html;
   p.className=`ipanel show ${isVocab?'vocab-panel':'idiom-panel'}`;
